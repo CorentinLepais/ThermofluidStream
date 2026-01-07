@@ -55,6 +55,11 @@ to specify system properties.",Icon(coordinateSystem(preserveAspectRatio=false),
           pattern=LinePattern.None,
           smooth=Smooth.Bezier,
           fillColor={19,76,141},
+          fillPattern=FillPattern.Solid),
+        Polygon(
+          points={{40,-90},{80,-90},{80,-70},{60,-70},{60,-30},{40,-30},{40,-90}},
+          lineColor={0,0,0},
+          fillColor=if neglectInertance then {162,29,33} else {0,140,72},
           fillPattern=FillPattern.Solid)}), Diagram(
         coordinateSystem(preserveAspectRatio=false)),
     Documentation(revisions="<html>
@@ -71,5 +76,9 @@ to specify system properties.",Icon(coordinateSystem(preserveAspectRatio=false),
 <p style=\"margin-left: 40px;\"><strong><span style=\"font-family: Courier New;\">inner</span></strong> ThermofluidStream.DropOfCommons dropOfCommons </p>
 <p>Note, it must be an <strong>inner</strong> declaration with instance name <strong>dropOfCommons</strong> so that all components of a ThermofluidStream model can reference it. When dragging the &quot;DropOfCommons&quot; object from the package browser into the diagram layer, this declaration is automatically generated (defined via annotations in the model). </p>
 <p>All flow, density, pressure, and visualization parameters in a simulation model are resolved relative to the settings in this dropOfCommons instance. Adjusting these parameters allows controlling global simulation behavior, visualization preferences, and regularization methods consistently across all components. </p>
+<p>
+    Additionnal parameter <code>neglectInertance</code> to activate or deactivate the inertance. The letter L on the icon layer changes color to indicate whether the inertance is neglected 
+    <span style=\"color: #ee2e2f;\">(neglectInertance = true)</span> or not <span style=\"color: #008c48;\">(neglectInertance = false)</span>.
+</p>
 </html>"));
 end DropOfCommons;
