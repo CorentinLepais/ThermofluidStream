@@ -1,6 +1,7 @@
 within ThermofluidStream.Sensors.Internal;
-function getQuantity "Computes selected quantity from state"
+function getQuantity "Computes selected quantity from state (OBSOLETE)"
   extends Modelica.Icons.Function;
+  extends Modelica.Icons.ObsoleteModel;
 
   replaceable package Medium = Media.myMedia.Interfaces.PartialMedium
     "Medium model"
@@ -12,7 +13,7 @@ function getQuantity "Computes selected quantity from state"
   input Medium.ThermodynamicState state;
   input SI.Pressure r;
   input Types.Quantities quantity;
-  input SI.Density rho_min;
+  input Medium.Density rho_min;
   output Real value;
 
 algorithm
@@ -54,7 +55,7 @@ algorithm
     value :=0;
   end if;
 
-  annotation (Documentation(info="<html>
+  annotation (obsolete="Use Sensors.Internal.GetQuantity instead",Documentation(info="<html>
 <p>Helper function to get a quantity from an Thermofluid state.</p>
 </html>"));
 end getQuantity;

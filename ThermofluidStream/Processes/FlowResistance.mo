@@ -59,48 +59,43 @@ some medium properties and the geometry of the pipe.
     annotation(Dialog(tab="Advanced",group="Inertance"),Evaluate=true, HideResult=true, choices(checkBox=true));
   parameter Utilities.Units.Inertance L_value = dropOfCommons.L "Inertance"
     annotation(Dialog(tab="Advanced",group="Inertance", enable=not computeL));
-  parameter SI.Density rho_min = dropOfCommons.rho_min "Minimal inlet density"
+  parameter Medium.Density rho_min = dropOfCommons.rho_min "Minimal inlet density"
     annotation(Dialog(tab="Advanced"));
+  parameter SI.Pressure dp_ref_color = 1e5 "Reference pressure drop value for the intensity of coloring" annotation(Dialog(tab="Layout", group="Visuals", enable=dropOfCommons.displayColor));
 
   final parameter SI.Length D_h=4*areaCross/perimeter "Hydraulic diameter";
   final parameter SI.Length perimeter=if shape == ShapeOfResistance.circular
        then 2*pi*r elseif shape == ShapeOfResistance.rectangle then 2*a + 2*b
        else perimeterInput "Perimeter";
   parameter Boolean showPressureDrop=true "= true, if pressure drop is displayed"
-    annotation (
-    Dialog(tab="Layout", group="Display variables"),
-    Evaluate=true,
-    HideResult=true,
-    choices(checkBox=true));
-  parameter ThermofluidStream.Processes.Internal.Types.PressureUnit
-    pressureDropUnit=ThermofluidStream.Processes.Internal.Types.PressureUnit.Pa "Unit for displayed pressure drop"
-    annotation (Dialog(tab="Layout", group="Display variables", enable=showPressureDrop), Evaluate=true, HideResult=true);
-  parameter Integer pressureDropSignificantDigits(min=1) = 1
-    "Significant digits for displayed pressure drop" annotation (
-    Dialog(
-      tab="Layout",
-      group="Display variables",
-      enable=showPressureDrop),
-    Evaluate=true,
-    HideResult=false);
-
-
+    annotation(
+      Dialog(tab="Layout", group="Display variables", enable=displayParameters),
+      Evaluate=true,
+      HideResult=true,
+      choices(checkBox=true));
+  parameter ThermofluidStream.Types.PressureUnit pressureDropUnit=ThermofluidStream.Types.PressureUnit.Pa "Unit used for displaying the pressure drop"
+    annotation(Dialog(tab="Layout", group="Display variables", enable=showPressureDrop and displayParameters), Evaluate=true, HideResult=true);
+  parameter Integer pressureDropSignificantDigits(min=1) = 1 "Number of significant digits used to display the pressure drop"
+    annotation(Dialog(tab="Layout", group="Display variables", enable = showPressureDrop and displayParameters));
   final parameter SI.Area areaCross=
     if shape == ShapeOfResistance.circular then pi*r*r
     elseif shape == ShapeOfResistance.rectangle then a*b
     else areaCrossInput "Cross-sectional area";
 
   final parameter SI.Area areaHydraulic= pi*D_h*D_h*1/4 "Hydraulic cross-sectional area";
+  Real phi(unit = "1", min=0, max=1) "Normalized pressure for coloring the flow resistance";
 
 protected
-  SI.Density rho_in = max(rho_min, Medium.density(inlet.state)) "Inlet density";
-  SI.DynamicViscosity mu_in = Medium.dynamicViscosity(inlet.state) "Inlet dynamic viscosity";
+  Medium.Density rho_in = max(rho_min, Medium.density(inlet.state)) "Inlet density";
+  Medium.DynamicViscosity mu_in = Medium.dynamicViscosity(inlet.state) "Inlet dynamic viscosity";
 
 equation
   dp = -pLoss(m_flow, rho_in, mu_in, D_h/2, l);
   h_out = h_in;
   Xi_out = Xi_in;
-
+  phi = if dropOfCommons.displayColor then
+    noEvent(max(0, min(1, abs(dp)/dp_ref_color)))
+    else 0;
   annotation (
     Icon(coordinateSystem(preserveAspectRatio=true), graphics={
         Text(visible=displayInstanceName,
@@ -122,7 +117,8 @@ equation
           extent={{-60,60},{60,-60}},
           lineColor={28,108,200},
           lineThickness=0.5,
-          fillColor={255,255,255},
+          fillColor=DynamicSelect({255,255,255}, if dropOfCommons.displayColor == true
+               then {255,integer(255*(1 - phi)),integer(255*(1 - phi))} else {255,255,255}),
           fillPattern=FillPattern.Solid),
         Line(
           points={{40,0},{-48,0}},
@@ -142,24 +138,23 @@ equation
           origin={0,25},
           rotation=180),
         Text(
-          visible= dropOfCommons.displayParameters and showPressureDrop and pressureDropUnit == ThermofluidStream.Processes.Internal.Types.PressureUnit.Pa,
+          visible = displayParameters and showPressureDrop and pressureDropUnit == ThermofluidStream.Types.PressureUnit.Pa,
           extent={{-150,-70},{150,-100}},
           textColor={0,0,0},
-          textString=DynamicSelect("", "dp = " + String(-dp, significantDigits=pressureDropSignificantDigits)+ " Pa")),
+          textString=DynamicSelect(if true then "dp in Pa" else "", "dp = " + String(-dp, significantDigits=pressureDropSignificantDigits)+ " Pa")),
         Text(
-          visible= dropOfCommons.displayParameters and showPressureDrop and pressureDropUnit == ThermofluidStream.Processes.Internal.Types.PressureUnit.kPa,
+          visible = displayParameters and showPressureDrop and pressureDropUnit == ThermofluidStream.Types.PressureUnit.kPa,
           extent={{-150,-70},{150,-100}},
           textColor={0,0,0},
-            textString=DynamicSelect("", "dp = " + String(-dp/1e3, significantDigits=pressureDropSignificantDigits)+ " kPa")),
+          textString=DynamicSelect(if true then "dp in kPa" else "", "dp = " + String(-dp/1e3, significantDigits=pressureDropSignificantDigits)+ " kPa")),
         Text(
-          visible= dropOfCommons.displayParameters and showPressureDrop and pressureDropUnit == ThermofluidStream.Processes.Internal.Types.PressureUnit.bar,
+          visible = displayParameters and showPressureDrop and pressureDropUnit == ThermofluidStream.Types.PressureUnit.bar,
           extent={{-150,-70},{150,-100}},
           textColor={0,0,0},
-          textString=DynamicSelect("", "dp = " + String(-dp/1e5, significantDigits=pressureDropSignificantDigits)+ " bar"))}),  Diagram(coordinateSystem(preserveAspectRatio=true)),
+          textString=DynamicSelect(if true then "dp in bar" else "", "dp = " + String(-dp/1e5, significantDigits=pressureDropSignificantDigits)+ " bar"))}),  Diagram(coordinateSystem(preserveAspectRatio=true)),
     Documentation(info="<html>
-<p>
-Implementation of a flow resistance pipe with different selectable
-flow resistance functions (laminar, laminar-turbulent, linear-quadratic).
-</p>
+<p>Implementation of a flow resistance pipe with different selectable flow resistance functions (laminar, laminar-turbulent, linear-quadratic). </p>
+<p>The pressure drop can be displayed with the coloring (<code>displayColor</code> in the <strong>DropOfCommons</strong>). The parameter <code>dp_ref_color</code> can be adjusted depending on expected pressure drop and intensity of coloring. Coloring ranges from 0 to 100 &percnt; red, with 100 &percnt; red at <code>dp = dp_ref_color</code>.</p>
+<p><code>dp_ref_color</code> needs to be defined according to the use case.</p>
 </html>"));
 end FlowResistance;
