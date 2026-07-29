@@ -1,0 +1,12 @@
+time
+massFlowRate.y
+inletPressure.T_start
+inletPressure.count
+inletTemperature.T_start
+inletTemperature.count
+isentropicEfficiency.T_start
+isentropicEfficiency.count
+massFlowRate1.T_start
+massFlowRate1.count
+pressureRatio.T_start
+pressureRatio.count

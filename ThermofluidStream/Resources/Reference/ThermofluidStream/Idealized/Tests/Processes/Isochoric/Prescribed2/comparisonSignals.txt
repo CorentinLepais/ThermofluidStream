@@ -1,0 +1,10 @@
+time
+firstOrder.y
+inletPressure.T_start
+inletPressure.count
+inletTemperature.T_start
+inletTemperature.count
+massFlowRate.T_start
+massFlowRate.count
+temperatureDifference.T_start
+temperatureDifference.count

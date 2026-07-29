@@ -1,0 +1,12 @@
+time
+tank.M
+tank.MXi[1]
+tank.MXi[2]
+tank.U_med
+tank.inlet[1].m_flow
+tank.inlet[2].m_flow
+tank.outlet[1].m_flow
+tank1.M
+tank1.MXi[1]
+tank1.MXi[2]
+tank1.U_med

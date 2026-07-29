@@ -1,0 +1,8 @@
+time
+flowResistance2.inlet.m_flow
+source.outlet.m_flow
+tank1.M
+tank1.MXi[1]
+tank1.MXi[2]
+tank1.U_med
+tank1.fore[1].m_flow

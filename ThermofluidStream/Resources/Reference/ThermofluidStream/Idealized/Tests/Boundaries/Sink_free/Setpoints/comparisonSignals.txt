@@ -1,0 +1,10 @@
+time
+source1.outlet.m_flow
+h_pulse.T_start
+h_pulse.count
+m_flow_pulse.T_start
+m_flow_pulse.count
+p_pulse.T_start
+p_pulse.count
+p_pulse1.T_start
+p_pulse1.count

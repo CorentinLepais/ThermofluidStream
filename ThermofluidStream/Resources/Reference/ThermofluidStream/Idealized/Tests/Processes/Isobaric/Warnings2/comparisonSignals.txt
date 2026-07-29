@@ -1,0 +1,5 @@
+time
+heatFlowRate.T_start
+heatFlowRate.count
+temperatureDifference.T_start
+temperatureDifference.count

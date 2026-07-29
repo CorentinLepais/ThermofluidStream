@@ -1,0 +1,14 @@
+time
+composition.inlet.m_flow
+deltaMassFractions.T_start
+deltaMassFractions.count
+massFlowRate.T_start
+massFlowRate.count
+massFractions.T_start
+massFractions.count
+massFractions1.T_start
+massFractions1.count
+pressure.T_start
+pressure.count
+temperature.T_start
+temperature.count

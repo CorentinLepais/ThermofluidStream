@@ -1,0 +1,14 @@
+time
+flexVolume.M
+flexVolume.U_med
+heatCapacitor.T
+heatExchanger.h_out_A
+heatExchanger.h_out_B
+heatExchanger.inletA_m_flow
+heatExchanger.inletB_m_flow
+inertia.phi
+inertia.w
+speed.phi
+speed.w
+combiTimeTable.nextTimeEvent
+combiTimeTable.nextTimeEventScaled

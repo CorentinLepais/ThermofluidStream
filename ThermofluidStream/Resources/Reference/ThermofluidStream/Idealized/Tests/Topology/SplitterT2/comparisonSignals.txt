@@ -1,0 +1,7 @@
+time
+sinkA2.inlet.m_flow
+source2.outlet.m_flow
+m_flow_pulse1.T_start
+m_flow_pulse1.count
+m_flow_pulse2.T_start
+m_flow_pulse2.count

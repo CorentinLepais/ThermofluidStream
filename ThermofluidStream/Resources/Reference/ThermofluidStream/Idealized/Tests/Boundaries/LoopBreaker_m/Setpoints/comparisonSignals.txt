@@ -1,0 +1,12 @@
+time
+loopBreaker10.outlet.m_flow
+loopBreaker5.outlet.m_flow
+loopBreaker8.outlet.m_flow
+m_flow_pulse1.T_start
+m_flow_pulse1.count
+m_flow_pulse3.T_start
+m_flow_pulse3.count
+m_flow_pulse5.T_start
+m_flow_pulse5.count
+p_pulse.T_start
+p_pulse.count

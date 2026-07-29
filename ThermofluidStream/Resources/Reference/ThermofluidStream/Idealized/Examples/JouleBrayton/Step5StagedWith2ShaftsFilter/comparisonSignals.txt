@@ -1,0 +1,4 @@
+time
+highPressureTurbine.dp
+recuperator.h_out_A
+recuperator.h_out_B

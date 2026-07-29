@@ -1,0 +1,16 @@
+time
+sinkA1.inlet.m_flow
+sinkA2.inlet.m_flow
+sinkA3.inlet.m_flow
+m_flow_pulse1.T_start
+m_flow_pulse1.count
+m_flow_pulse2.T_start
+m_flow_pulse2.count
+m_flow_pulse3.T_start
+m_flow_pulse3.count
+m_flow_pulse4.T_start
+m_flow_pulse4.count
+m_flow_pulse5.T_start
+m_flow_pulse5.count
+m_flow_pulse6.T_start
+m_flow_pulse6.count
