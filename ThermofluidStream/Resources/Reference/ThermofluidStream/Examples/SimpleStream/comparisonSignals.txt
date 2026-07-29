@@ -1,5 +1,5 @@
 time
 heatCapacitor.T
+pipe1.inlet.m_flow
 source.outlet.m_flow
 thermalConduction.h
-thermalConduction.inlet.m_flow

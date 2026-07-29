@@ -3,7 +3,7 @@ conductionElement.h
 conductionElement1.h
 counterFlowNTU.h_out_A
 counterFlowNTU.h_out_B
-counterFlowNTU.inletA.m_flow
+counterFlowNTU.inletA_m_flow
 discretizedHEX.thermalElementA[1].h
 discretizedHEX.thermalElementA[2].h
 discretizedHEX.thermalElementA[3].h
