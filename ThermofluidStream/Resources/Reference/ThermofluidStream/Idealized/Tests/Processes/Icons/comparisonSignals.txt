@@ -1,0 +1,9 @@
+time
+massFlowRateRamp.nextTimeEvent
+massFlowRateRamp.nextTimeEventScaled
+pressureDifferenceStep.nextTimeEvent
+pressureDifferenceStep.nextTimeEventScaled
+pressureLossStep.nextTimeEvent
+pressureLossStep.nextTimeEventScaled
+temperatureDifferenceStep.nextTimeEvent
+temperatureDifferenceStep.nextTimeEventScaled
