@@ -7,7 +7,10 @@ model Isobaric "Isobaric process"
   import OutletSpecification = ThermofluidStream.Idealized.Types.OutletSpecification.Isobaric;
   import HeatFlowSignal = ThermofluidStream.Idealized.Types.EnergyFlowSignalMode;
   import ValueSpecification = ThermofluidStream.Types.ValueSpecification;
+  import IconType = ThermofluidStream.Idealized.Types.Icons.HeatTransfer;
 
+  parameter IconType iconType = ThermofluidStream.Idealized.Types.Icons.HeatTransfer.Heating "Defines the initial icon prior to simulation" annotation(
+    Dialog(group="Specification"), Evaluate=true, HideResult=true);
   parameter OutletSpecification outletSpec = ThermofluidStream.Idealized.Types.OutletSpecification.Isobaric.TemperatureDifference "Quantity used to define the outlet state" annotation(
     Dialog(group="Specification", enable=specifyOutlet), Evaluate=true, HideResult=not specifyOutlet);
   parameter ValueSpecification outletValueSpec = ThermofluidStream.Types.ValueSpecification.Fixed "Specifies whether the quantity is fixed or prescribed" annotation(
@@ -34,7 +37,6 @@ model Isobaric "Isobaric process"
     Dialog(group="Advanced specification"), Evaluate=true);
   parameter Boolean specifyOutlet = true "= true to specify the outlet state is specified" annotation(
     Dialog(group="Advanced specification"), Evaluate=true, HideResult=true, choices(checkBox=true));
-
   parameter Boolean showOutletSpecification = true "= true to show the fixed outlet specification value (either dT_fixed, T_out_fixed,  dh_fixed, h_out_fixed)" annotation(
     Dialog(tab="Layout", group="Display parameters",
       enable = displayParameters and outletValueSpec == ValueSpecification.Fixed  and specifyOutlet), Evaluate=true, HideResult=true, choices(checkBox=true));
@@ -48,6 +50,10 @@ model Isobaric "Isobaric process"
     Dialog(
       enable = systemSpec == ThermofluidStream.Idealized.Types.SystemModel.Cycle),
     HideResult = systemSpec == ThermofluidStream.Idealized.Types.SystemModel.Flow);
+  final parameter Boolean isCycle = systemSpec == ThermofluidStream.Idealized.Types.SystemModel.Cycle "= true, if systemSpec == Cycle; auxiliary variable" annotation(
+    Evaluate=true);
+  final parameter Boolean iconIsHeating = iconType == ThermofluidStream.Idealized.Types.Icons.HeatTransfer.Heating "= true, if iconType == Heating; auxiliary variable" annotation(
+    Evaluate=true);
 
   Modelica.Blocks.Interfaces.RealInput outletSpec_prescribed if specifyOutlet and outletValueSpec == ValueSpecification.Prescribed  "Prescribed outlet specification [SI-units]" annotation(
     Placement(transformation(extent={{-20,-20},{20,20}},rotation=90,origin={100,-120})));
@@ -156,8 +162,6 @@ equation
     elseif noEvent(heatFlowSignal == ThermofluidStream.Idealized.Types.EnergyFlowSignalMode.Input and specifyOutlet and abs(Q_flow) > eps_Q_flow and abs(q) < eps_q) then -1.0
     else 0;
 
-
-
   if systemSpec == SystemSpecification.Cycle then
     w_exp = - p*(v_out - v_in);
     w_amb = - p_inf*(v_out - v_in);
@@ -188,22 +192,10 @@ equation
           lineThickness=0.5,
           fillColor={255,255,255},
           fillPattern=FillPattern.Solid),
-        Ellipse(
-          extent={{-50,50},{50,-50}},
-          lineColor={28,108,200},
-          lineThickness=0.5),
         Text(
           extent={{-150,120},{150,80}},
           textString = if displayInstanceName then "%name" else "",
           textColor = dropOfCommons.instanceNameColor),
-        Text(visible = systemSpec == ThermofluidStream.Idealized.Types.SystemModel.Flow,
-          extent={{-30,30},{30,-30}},
-          textColor={28,108,200},
-          textString="p"),
-        Text(
-          extent={{-40,20},{40,-20}},
-          textColor={28,108,200},
-          textString = if systemSpec == ThermofluidStream.Idealized.Types.SystemModel.Cycle then "p-c" else ""),
         Text(
           extent={{-150,-100},{150,-70}},
           textColor={0,0,0},
@@ -219,13 +211,6 @@ equation
         Line(
           points = if systemSpec == ThermofluidStream.Idealized.Types.SystemModel.Cycle then {{-100,0},{-100,-100}} else {{0,0}},
           color={255,170,85}),
-        Polygon(visible = showHeatFlowDirection,
-          origin={-40,-50},
-          rotation = DynamicSelect(90, if Q_flow >= 0 then 90 else -90),
-          points={{-18,3},{4,3},{4,10},{18,0},{4,-10},{4,-3},{-18,-3},{-18,3}},
-          fillColor = {191,0,0},
-          fillPattern = DynamicSelect(FillPattern.None, if abs(Q_flow) >= 1e-8 then FillPattern.Solid else FillPattern.None),
-          pattern=LinePattern.None),
         Text(visible = showHeatFlowDirection,
           origin={-60,-70},
           extent={{0,0},{36,36}},
@@ -281,6 +266,91 @@ equation
           extent={{-96,42},{-64,38}},
           fillColor={28,108,200},
           fillPattern = if specifyOutlet and heatFlowSignal == ThermofluidStream.Idealized.Types.EnergyFlowSignalMode.Input then FillPattern.Solid else FillPattern.None,
+          pattern=LinePattern.None),
+        Rectangle(
+          visible = not isCycle,
+          extent=DynamicSelect(if iconIsHeating then {{-44,40},{40,-40}} else {{44,40},{-40,-40}}, if ((iconIsHeating and dh >= 0) or dh > 0) then {{-44,40},{40,-40}} else {{44,40},{-40,-40}}),
+          lineColor={28,108,200},
+          fillColor={235,246,255},
+          fillPattern=FillPattern.Solid,
+          radius=20,
+          pattern=LinePattern.None),
+        Rectangle(
+          visible = not isCycle,
+          extent=DynamicSelect(if iconIsHeating then {{-18,40},{40,-40}} else {{18,40},{-40,-40}}, if ((iconIsHeating and dh >= 0) or dh > 0) then {{-18,40},{40,-40}} else {{18,40},{-40,-40}}),
+          lineColor={28,108,200},
+          fillColor={255,223,213},
+          fillPattern=FillPattern.Solid,
+          radius=20,
+          pattern=LinePattern.None),
+        Rectangle(
+          visible = not isCycle,
+          extent=DynamicSelect(if iconIsHeating then {{2,40},{40,-40}} else {{-2,40},{-40,-40}}, if ((iconIsHeating and dh >= 0) or dh > 0) then {{2,40},{40,-40}} else {{-2,40},{-40,-40}}),
+          lineColor={28,108,200},
+          fillColor={255,200,170},
+          fillPattern=FillPattern.Solid,
+          radius=20,
+          pattern=LinePattern.None),
+        Rectangle(
+          visible = not isCycle,
+          extent=DynamicSelect(if iconIsHeating then {{20,40},{40,-40}} else {{-20,40},{-40,-40}}, if ((iconIsHeating and dh >= 0) or dh > 0) then {{20,40},{40,-40}} else {{-20,40},{-40,-40}}),
+          lineColor={28,108,200},
+          fillColor={255,180,140},
+          fillPattern=FillPattern.Solid,
+          radius=30,
+          pattern=LinePattern.None),
+        Rectangle(
+          visible = isCycle,
+          extent=DynamicSelect(if iconIsHeating then {{-44,32},{-4,-32}} else {{44,32},{4,-32}}, if ((iconIsHeating and dh >= 0) or dh > 0) then {{-44,32},{-4,-32}} else {{44,32},{4,-32}}),
+          lineColor={85,170,255},
+          fillColor={235,246,255},
+          fillPattern=FillPattern.Solid,
+          radius=20),
+        Rectangle(
+          visible = isCycle,
+          extent=DynamicSelect(if iconIsHeating then {{4,42},{44,-42}} else {{-4,42},{-44,-42}}, if ((iconIsHeating and dh >= 0) or dh > 0) then {{4,42},{44,-42}} else {{-4,42},{-44,-42}}),
+          lineColor={85,170,255},
+          fillColor={255,197,170},
+          fillPattern=FillPattern.Solid,
+          radius=20),
+        Polygon(visible = showHeatFlowDirection,
+          origin = DynamicSelect(if iconIsHeating then {24,-50} else {-24,-50}, if Q_flow >= 0 then {24,-50} else {-24,-50}),
+          rotation = DynamicSelect(if iconIsHeating then 90 else -90, if Q_flow >= 0 then 90 else -90),
+          points={{-18,3},{4,3},{4,10},{18,0},{4,-10},{4,-3},{-18,-3},{-18,3}},
+          fillColor = {191,0,0},
+          fillPattern = DynamicSelect(FillPattern.Solid, if abs(Q_flow) >= 1e-8 then FillPattern.Solid else FillPattern.None),
+          pattern=LinePattern.None),
+        Rectangle(
+          visible = 1<0,
+          extent={{-44,40},{40,-40}},
+          lineColor={28,108,200},
+          fillColor={235,246,255},
+          fillPattern=FillPattern.Solid,
+          radius=20,
+          pattern=LinePattern.None),
+        Rectangle(
+          visible = 1<0,
+          extent={{-18,40},{40,-40}},
+          lineColor={28,108,200},
+          fillColor={255,223,213},
+          fillPattern=FillPattern.Solid,
+          radius=20,
+          pattern=LinePattern.None),
+        Rectangle(
+          visible = 1<0,
+          extent={{2,40},{40,-40}},
+          lineColor={28,108,200},
+          fillColor={255,200,170},
+          fillPattern=FillPattern.Solid,
+          radius=20,
+          pattern=LinePattern.None),
+        Rectangle(
+          visible = 1<0,
+          extent={{20,40},{40,-40}},
+          lineColor={28,108,200},
+          fillColor={255,180,140},
+          fillPattern=FillPattern.Solid,
+          radius=30,
           pattern=LinePattern.None)}),
     Documentation(
       info="<html>
@@ -432,6 +502,10 @@ equation
 </html>",
       revisions="<html>
   <ul>
+    <li>
+      2026-08, by Silvan Keim (silvan.keim@dlr.de):<br>
+      Improved icon.
+    </li>
     <li>
       2026, by Raphael Gebhart (raphael.gebhart@dlr.de):<br>
       Initial version.

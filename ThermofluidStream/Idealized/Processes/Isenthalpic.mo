@@ -86,6 +86,7 @@ equation
   h_out = h_in;
   Xi_out = Xi_in;
 
+  //
   annotation(
     Icon(
       graphics={
@@ -106,18 +107,10 @@ equation
           lineThickness=0.5,
           fillColor={255,255,255},
           fillPattern=FillPattern.Solid),
-        Ellipse(
-          extent={{-50,50},{50,-50}},
-          lineColor={28,108,200},
-          lineThickness=0.5),
         Text(
           extent={{-150,120},{150,80}},
           textString=if displayInstanceName then "%name" else "",
           textColor=dropOfCommons.instanceNameColor),
-        Text(
-          extent={{-30,30},{30,-30}},
-          textColor={28,108,200},
-          textString="h"),
         Text(
           extent={{-150,-100},{150,-70}},
           textColor={0,0,0},
@@ -134,10 +127,84 @@ equation
           lineColor={0,0,0},
           fillColor = {238,46,47},
           fillPattern=FillPattern.Solid),
+        Rectangle(
+          extent=DynamicSelect({{-30,42},{-8,-42}}, if dpLoss >= 0 then {{-30,42},{-8,-42}} else {{30,42},{8,-42}}),
+          lineColor={28,108,200},
+          pattern=LinePattern.None,
+          fillColor={185,221,255},
+          fillPattern=FillPattern.Solid,
+          radius=8),
+        Rectangle(
+          extent=DynamicSelect({{-44,42},{-8,-42}}, if dpLoss >= 0 then {{-44,42},{-8,-42}} else {{44,42},{8,-42}}),
+          lineColor={28,108,200},
+          fillColor={185,221,255},
+          fillPattern=FillPattern.Solid,
+          radius=20,
+          pattern=LinePattern.None),
+        Rectangle(
+          extent=DynamicSelect({{8,42},{32,-42}}, if dpLoss >= 0 then {{8,42},{32,-42}} else {{-8,42},{-32,-42}}),
+          lineColor={28,108,200},
+          pattern=LinePattern.None,
+          fillColor={235,246,255},
+          fillPattern=FillPattern.Solid,
+          radius=8),
+        Rectangle(
+          extent=DynamicSelect({{8,42},{44,-42}}, if dpLoss >= 0 then {{8,42},{44,-42}} else {{-8,42},{-44,-42}}),
+          lineColor={28,108,200},
+          fillColor={235,246,255},
+          fillPattern=FillPattern.Solid,
+          radius=20,
+          pattern=LinePattern.None),
+        Rectangle(
+          extent={{-4,44},{4,12}},
+          lineColor={28,108,200},
+          fillColor={85,170,255},
+          fillPattern=FillPattern.Solid,
+          radius=20,
+          pattern=LinePattern.None),
+        Rectangle(
+          extent={{-4,-12},{4,-44}},
+          lineColor={28,108,200},
+          fillColor={85,170,255},
+          fillPattern=FillPattern.Solid,
+          radius=20,
+          pattern=LinePattern.None),
         Text(
           extent={{-100,50},{100,-50}},
           textColor={238,46,47},
-          textString = DynamicSelect("",if m_flow*dpLoss < 0 then "dp" else ""))}),
+          textString = DynamicSelect("",if m_flow*dpLoss < 0 then "dp" else "")),
+        Rectangle(
+          visible = 1<0,
+          extent={{-30,42},{-8,-42}},
+          lineColor={28,108,200},
+          pattern=LinePattern.None,
+          fillColor={185,221,255},
+          fillPattern=FillPattern.Solid,
+          radius=8),
+        Rectangle(
+          visible = 1<0,
+          extent={{-44,42},{-8,-42}},
+          lineColor={28,108,200},
+          fillColor={185,221,255},
+          fillPattern=FillPattern.Solid,
+          radius=20,
+          pattern=LinePattern.None),
+        Rectangle(
+          visible = 1<0,
+          extent={{8,42},{32,-42}},
+          lineColor={28,108,200},
+          pattern=LinePattern.None,
+          fillColor={235,246,255},
+          fillPattern=FillPattern.Solid,
+          radius=8),
+        Rectangle(
+          visible = 1<0,
+          extent={{8,42},{44,-42}},
+          lineColor={28,108,200},
+          fillColor={235,246,255},
+          fillPattern=FillPattern.Solid,
+          radius=20,
+          pattern=LinePattern.None)}),
     Documentation(
       info="<html>
   <p>
@@ -194,7 +261,11 @@ equation
       revisions="<html>
   <ul>
     <li>
-      06/2026, by Raphael Gebhart (raphael.gebhart@dlr.de):<br>
+      2026-08, by Silvan Keim (silvan.keim@dlr.de):<br>
+      Improved icon.
+    </li>
+    <li>
+      2026-06, by Raphael Gebhart (raphael.gebhart@dlr.de):<br>
       The default value of <code>enforcePressureDrop</code> was changed from <code>true</code> to <code>false</code> to improve numerical robustness in inverse calculations. 
       Models that require the previous behavior must now explicitly set <code>enforcePressureDrop=true</code>.
     </li>
